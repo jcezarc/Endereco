@@ -19,7 +19,7 @@ def separa_endereço(endereço: str) -> dict:
         return arr.pop(i)
     logradouro, número, *arr = re.split(  # ----------------------- [1]
         r'(\d+)',
-        re.sub('[-:]', endereço, '')
+        re.sub('[-:]', '', endereço)
     )
     CEP = next(  # ------------------------------------------------ [2]
         (extrai_cep(arr, i)
