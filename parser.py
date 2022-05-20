@@ -7,7 +7,8 @@ from difflib import SequenceMatcher
 class Endereco:
     abreviacoes = {}
 
-    def __init__(self, texto: str):        
+    def __init__(self, texto: str, id: int):
+        self.id = id
         def extrai_cep(arr: list, i: int) -> str:
             if i:
                 palavras = re.split(r'(\W+)', arr[i-1])
