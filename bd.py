@@ -2,7 +2,7 @@ import itertools
 from parser import Endereco
 
 
-def exluir_contatos_duplicados(cliente: int, limite: int, conexao) -> str:
+def contatos_duplicados(cliente: int, limite: int, conexao) -> list:
         query = """
         select 
             c.endereco, c.id
@@ -14,15 +14,12 @@ def exluir_contatos_duplicados(cliente: int, limite: int, conexao) -> str:
             c.dt_atualizacao desc
         limit {}
         """.format(cliente, limite)
-        duplicados = [
+        return [
             a.id for a, b in itertools.combinations([
                 Endereco(*db) for db in conexao.execute(query)],
                 2
             ) if a == b
         ]
-        return 'DELETE FROM contatos WHERE id in ({})'.format(
-            ','.join(duplicados)
-        )
 
 
 if __name__ == '__main__':
