@@ -7,7 +7,7 @@ from difflib import SequenceMatcher
 class Endereco:
     abreviacoes = {}
 
-    def __init__(self, texto: str, id: int):
+    def __init__(self, texto: str, id: int=0):
         self.id = id
         def extrai_cep(arr: list, i: int) -> str:
             if i:
@@ -16,7 +16,7 @@ class Endereco:
             return arr.pop(i)
         logradouro, self.numero, *arr = re.split(
             r'(\d+)',
-            re.sub('[-:,\.]', '', self.remove_acentos(texto))
+            re.sub('[-:,\./]', '', self.remove_acentos(texto))
         )
         self.CEP = next(
             (extrai_cep(arr, i)
@@ -33,7 +33,7 @@ class Endereco:
         if not cls.abreviacoes:
             with open('abrev.json', 'r') as f:
                 cls.abreviacoes = json.load(f)
-        palavras = [cls.abreviacoes.get(t.upper(), t)
+        palavras = [cls.abreviacoes.get(t.lower(), t)
             for t in texto.split() if t.strip()]
         return ' '.join(palavras)
 

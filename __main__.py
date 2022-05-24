@@ -1,3 +1,5 @@
+import os
+from bd import contatos_duplicados
 from parser import Endereco
 
 
@@ -9,7 +11,25 @@ def teste_compara_enderecos():
         'Avenida Zé Candido Simoes 666 apartamento 14 bloco 25'
     )
     assert end1 == end2
-    print('*** Teste OK ***')
+
+def teste_duplicados_no_banco(params: dict):
+    esperado = params.pop('resultado_esperado')
+    PRIMEIRO = lambda a, b: a
+    if 'passwd' in params:
+        import mysql.connector
+        db = mysql.connector.connect(**params)
+    else:
+        import sqlite3
+        arquivo = '/users/{user}/endereco/{database}.db'.format(**params)
+        db = sqlite3.connect(arquivo, check_same_thread=False)
+    assert contatos_duplicados(2, 10, db.cursor(), PRIMEIRO) == esperado
 
 
 teste_compara_enderecos()
+
+teste_duplicados_no_banco({
+    'database': 'legado', 'user': 'julio', 
+    # 'passwd': os.environ.get('MYSQL_PASSWORD'),
+    'resultado_esperado': [10, 12, 14, 16]
+})
+print('*** Teste OK ***')

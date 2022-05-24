@@ -2,29 +2,26 @@ import itertools
 from parser import Endereco
 
 
-def contatos_duplicados(cliente: int, limite: int, conexao) -> list:
-        query = """
-        select 
-            c.endereco, c.id
-        from 
-            contatos c 
-        where 
-            c.cliente = '{}'
-        order by 
-            c.dt_atualizacao desc
-        limit {}
-        """.format(cliente, limite)
-        return [
-            a.id for a, b in itertools.combinations([
-                Endereco(*db) for db in conexao.execute(query)],
-                2
-            ) if a == b
-        ]
-
-
-if __name__ == '__main__':
-    from conexao import Conexao
-    print(exluir_contatos_duplicados(
-        Conexao(usuario='root', senha='123'),
-        cliente=35, limite=10)
-    )
+def contatos_duplicados(cliente: int, limite: int, conexao, escolha: callable) -> list:
+    '''
+    Retorna os id´s dos contatos de endereço duplicados.
+    :cliente - id do cliente dono dos endereços
+    :limite - número máximo de endereços a serem verificados
+    :conexao - conexão com o banco de dados
+    :escolha - função que escolhe o endereço a ser mantido
+    '''
+    query = """
+    select 
+        c.conteudo, c.id
+    from 
+        contato c 
+    where 
+        c.cliente = '{}' AND classtype = 'Endereço'
+    limit {}
+    """.format(cliente, limite)
+    return [
+        escolha(a, b).id for a, b in itertools.combinations([
+            Endereco(*db) for db in conexao.execute(query).fetchall()],
+            2
+        ) if a == b
+    ]
