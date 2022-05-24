@@ -15,7 +15,7 @@ def teste_compara_enderecos():
 def teste_duplicados_no_banco(params: dict):
     esperado = params.pop('resultado_esperado')
     PRIMEIRO = lambda a, b: a
-    if 'passwd' in params:
+    if 'password' in params:
         import mysql.connector
         db = mysql.connector.connect(**params)
     else:
@@ -29,7 +29,7 @@ teste_compara_enderecos()
 
 teste_duplicados_no_banco({
     'database': 'legado', 'user': 'julio', 
-    # 'passwd': os.environ.get('MYSQL_PASSWORD'),
+    # 'password': os.environ.get('MYSQL_PASSWORD'),
     'resultado_esperado': [10, 12, 14, 16]
 })
 print('*** Teste OK ***')
