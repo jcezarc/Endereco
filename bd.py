@@ -8,7 +8,7 @@ def contatos_duplicados(cliente: int, limite: int, conexao, escolha: callable) -
     :cliente - id do cliente dono dos endereços
     :limite - número máximo de endereços a serem verificados
     :conexao - conexão com o banco de dados
-    :escolha - função que escolhe o endereço a ser mantido
+    :escolha - função que escolhe o endereço a ser selecionado
     '''
     query = """
     select 
